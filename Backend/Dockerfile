@@ -20,6 +20,9 @@ COPY Backend/package.json ./backend/
 WORKDIR /app/backend
 RUN npm install
 
+# Create "database" folder
+RUN mkdir database
+
 # Copy the rest of the Node.js app files
 COPY Backend/ ./
 
