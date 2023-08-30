@@ -1,4 +1,4 @@
-# Todo-React-MongoDB
+# FishnamesAPI-Server
 ## Table of contents
 * [General info](#general-info)
 * [Features](#features)
