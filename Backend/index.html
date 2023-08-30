@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Fish Name Generator</title>
+    <style>
+        /* Fonts and Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            text-align: center;
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .containerButtonAndTitle {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        h1 {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
+
+        #generateButton {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            margin: 20px auto;
+            display: block;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        #generateButton:hover {
+            background-color: #0056b3;
+        }
+
+        .output {
+            /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+            font-size: 18px;
+            text-align: center;
+            /* margin-top: 20px; */
+        }
+
+        .output-container {
+            border: 1px solid #333;
+            border-radius: 5px;
+            /* padding: 10px; */
+            display: inline-block;
+            width: 90%;
+            /* margin-right: 5%; */
+            text-align: left;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .output-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            margin-right: 1%;
+        }
+
+        .select-container {
+            display: flex;
+            /* justify-content: space-between; */
+        }
+
+        .select-box {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 18px;
+            text-align: left;
+            /* margin-top: 20px; */
+            border: 1px solid #333;
+            border-radius: 5px;
+            padding: 10px;
+            width: 90%;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 5%;
+        }
+
+        .select-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Center horizontally */
+        text-align: center;
+        width: 100%;
+
+    }
+
+    .select-containerParent{
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        margin-top: 5%;
+    }
+
+    .select-title {
+        margin-bottom: 10px; /* Adjust as needed for spacing */
+        font-weight: bold;
+        text-decoration: underline;
+    }
+
+ 
+    </style>
+</head>
+<body>
+    <div class="containerButtonAndTitle">
+        <h1>Random Fish Name Generator</h1>
+        <button id="generateButton">Generate Random Fish Name</button>
+    </div>
+    
+    <div class="container">
+        <div class="output-container">
+            <div class="output-title">Random Fish Name:</div>
+            <div class="output" id="randomFishName"></div>
+        </div>
+      
+    </div>
+
+    <div class="select-containerParent">
+    <div class="select-container">
+        <div class="select-title">Available Fish Names</div>
+        <select class="select-box" id="availableFishList" multiple>
+            <!-- Options will be populated dynamically -->
+        </select>
+        <div class="output-container">
+            <div class="output-title">Number of Available Fish Names:</div>
+            <div class="output" id="numAvailable"></div>
+        </div>
+    </div>
+    <div class="select-container">
+        <div class="select-title">Used Fishes Names</div>
+        <select class="select-box" id="usedFishList" multiple>
+            <!-- Options will be populated dynamically -->
+        </select>
+        <div class="output-container">
+            <div class="output-title">Number of Used Fish Names:</div>
+            <div class="output" id="numUsed"></div>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const generateButton = document.getElementById("generateButton");
+            const randomFishName = document.getElementById("randomFishName");
+            const numAvailable = document.getElementById("numAvailable");
+            const numUsed = document.getElementById("numUsed");
+
+            const availableFishList = document.getElementById("availableFishList");
+            const usedFishList = document.getElementById("usedFishList");
+
+            // // Function to fetch and populate the select elements
+            // const populateSelectElements = async () => {
+            //     try {
+            //         // Fetch available fish names from your server
+            //         const availableResponse = await fetch("/get_available_fish_names");
+            //         const availableData = await availableResponse.json();
+
+            //         // Fetch used fish names from your server
+            //         const usedResponse = await fetch("/get_used_fish_names");
+            //         const usedData = await usedResponse.json();
+
+            //         // Populate the select elements with the retrieved data
+            //         availableFishList.innerHTML = availableData.map(name => `<option>${name}</option>`).join("");
+            //         usedFishList.innerHTML = usedData.map(name => `<option>${name}</option>`).join("");
+            //     } catch (error) {
+            //         console.error("Error:", error);
+            //     }
+            // };
+
+            // // Populate select elements when the page loads
+            // populateSelectElements();
+
+            generateButton.addEventListener("click", async () => {
+                try {
+                    const response = await fetch("/random_fish_name", {
+                        method: "POST",
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.fish_name) {
+                            randomFishName.textContent = `${data.fish_name}`;
+                            numAvailable.textContent = `${data.num_available}`;
+                            numUsed.textContent = `${data.num_used}`; 
+
+                            const availableData = data.availableFishNames;
+                            const usedData = data.usedFishNames;
+
+                            // Populate the select elements with the retrieved data
+                            availableFishList.innerHTML = availableData.map(name => `<option>${name}</option>`).join("");
+                            usedFishList.innerHTML = usedData.map(name => `<option>${name}</option>`).join("");
+                           
+                        } else {
+                            randomFishName.textContent = "No more fish names available.";
+                            numAvailable.textContent = "";
+                        }
+                    } else {
+                        randomFishName.textContent = "Error generating a random fish name.";
+                        numAvailable.textContent = "";
+                    }
+                } catch (error) {
+                    console.error("Error:", error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

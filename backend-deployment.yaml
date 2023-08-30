@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: backend-image  # Replace with your actual image name and tag
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5000
+        env:
+        - name: MONGODB_HOST_NAME
+          value: mongo-service  # This should match the name of the MongoDB Service
