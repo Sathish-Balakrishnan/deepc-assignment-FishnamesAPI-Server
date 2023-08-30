@@ -43,4 +43,4 @@ $ kubectl apply -f .\backend-service.yaml
 $ minikube image load backend-image
 $ minikube service backend-service
 ```
-* Open the link: http://localhost:3000
+* After the successfull deployment, open the browser in the url provided by service: http://hostname:port/GUI
