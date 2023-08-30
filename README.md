@@ -7,7 +7,7 @@
 * [Setup](#setup)
 
 ## General info
-A fish names API server designed using Node.js, MongoDB for backed and HTML, JavaScript for frontend. The app is containerized using docker and deployed using kubernetes.
+A fish names API server designed using Node.js, MongoDB for Backend, and HTML, JavaScript for frontend. The app is containerized using Docker and deployed using Kubernetes.
 
 ## Features
 - Fetch  fishnames from internet
