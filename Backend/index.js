@@ -6,8 +6,8 @@ const path = require("path");
 
 app.use(express.static(path.join(__dirname, "index.html")));
 
-app.get("/GUI", async(req, res) => {
-res.sendFile(path.join(__dirname, "index.html"));
+app.get("/GUI", async (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
 
 });
 
@@ -40,7 +40,7 @@ app.post("/random_fish_name", async (req, res) => {
   var usedFishNames = [];
   // Check if a saved state exists in MongoDB and load it
   const db = client.db("fishNamesDatabase"); // Replace 'your_database_name' with your actual MongoDB database name
-  const collection = db.collection("used_fish_names" + "_" + clientIP );
+  const collection = db.collection("used_fish_names" + "_" + clientIP);
 
   const usedFishNamesCollection = await collection.findOne({ _id: "fish_names" });
   if (usedFishNamesCollection) {
@@ -63,17 +63,19 @@ app.post("/random_fish_name", async (req, res) => {
     console.log('usedFishNames Length: ', usedFishNames.length)
 
     var saveStatus = await saveState(clientIP, usedFishNames);
-    if(saveStatus) // Save the state after adding a fish name
+    if (saveStatus) // Save the state after adding a fish name
     {
       // res.json({ fish_name: randomName })
-      res.json({ fish_name: randomName, num_available: fishNames.length - 1,
-         availableFishNames: fishNames, usedFishNames: usedFishNames, num_used: usedFishNames.length });
+      res.json({
+        fish_name: randomName, num_available: fishNames.length - 1,
+        availableFishNames: fishNames, usedFishNames: usedFishNames, num_used: usedFishNames.length
+      });
 
     }
-    else{
+    else {
       res.json({ message: "Error saving usedFishNames to MongoDB." });
     }
-    
+
   } else {
     res.json({ message: "No more fish names available." });
   }
@@ -84,7 +86,7 @@ app.post("/random_fish_name", async (req, res) => {
 
 async function saveState(clientIP, usedFishNames) {
   const db = client.db("fishNamesDatabase"); // Replace 'your_database_name' with your actual MongoDB database name
-  const collection = db.collection("used_fish_names" + "_" + clientIP );
+  const collection = db.collection("used_fish_names" + "_" + clientIP);
 
   var saveStatus = false;
   // Save the used fish names state to the MongoDB collection
@@ -92,7 +94,7 @@ async function saveState(clientIP, usedFishNames) {
     .then(() => {
       console.log("Saved usedFishNames to MongoDB");
       saveStatus = true;
-      })
+    })
     .catch(err => {
       console.error("Error saving usedFishNames to MongoDB:", err);
     });
